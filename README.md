@@ -1,0 +1,1 @@
+# MCRLogManagerVer3.6.0.3
