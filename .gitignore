@@ -361,3 +361,10 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/MCRLogManager/MCRLM.ico
+/MCRLogManager/Font/GenShinGothic-Monospace-Medium.ttf
+/MCRLogManager/Font/GenShinGothic-Monospace-Regular.ttf
+/MCRLogManager/Font/SourceHanCodeJP-Regular.otf
+/MCRLogManager/Font/GenShinGothic-Monospace-Medium.ttf
+/MCRLogManager/Font/GenShinGothic-Monospace-Regular.ttf
+/MCRLogManager/Font/SourceHanCodeJP-Regular.otf

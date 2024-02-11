@@ -1,0 +1,75 @@
+﻿<Window x:Class="MCRLogManager.ColorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MCRLogManager"
+        mc:Ignorable="d"
+        Title="グラフ設定" Height="350" Width="350" ResizeMode="NoResize">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="monospace"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="monospace"/>
+            <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+            <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
+        </Style>
+    </Window.Resources>
+    <Grid Background="LightGray">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="172"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Background="Black" Grid.Row="0" Grid.ColumnSpan="2">
+            <TextBlock Name="textblock1" Width="auto" HorizontalAlignment="Center" Foreground="White"/>
+        </StackPanel>
+        <Border Grid.Row="1" Grid.ColumnSpan="2" BorderThickness="0,1" BorderBrush="DimGray">
+            <Grid Background="LightGray">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="{Binding Value,ElementName=rSlid, StringFormat=R:000}" FontFamily="Courier New" Grid.Column="0" Grid.Row="0" TextAlignment="Right"/>
+                <Slider x:Name="rSlid" Minimum="0" Maximum="255" IsSnapToTickEnabled="True" TickFrequency="1" Background="DarkRed" Grid.Column="2" Grid.Row="0" ValueChanged="SlideChanged"/>
+                <TextBlock Text="{Binding Value,ElementName=gSlid, StringFormat=G:000}" FontFamily="Courier New" Grid.Column="0" Grid.Row="1" TextAlignment="Right"/>
+                <Slider x:Name="gSlid" Minimum="0" Maximum="255" IsSnapToTickEnabled="True" TickFrequency="1" Background="DarkGreen" Grid.Column="2" Grid.Row="1" ValueChanged="SlideChanged"/>
+                <TextBlock Text="{Binding Value,ElementName=bSlid, StringFormat=B:000}" FontFamily="Courier New" Grid.Column="0" Grid.Row="2" TextAlignment="Right"/>
+                <Slider x:Name="bSlid" Minimum="0" Maximum="255"
+                        IsSnapToTickEnabled="True" TickFrequency="1" 
+                        Background="DarkBlue"  
+                        Grid.Column="2" Grid.Row="2" ValueChanged="SlideChanged"/>
+            </Grid>
+        </Border>
+        <TextBlock Text="現在の色" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="2"/>
+        <Rectangle Name="beforeColor" Grid.Column="0" Grid.Row="3"/>
+        <TextBlock Text="変更後の色" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="2"/>
+        <Rectangle Name="afterColor" Grid.Column="1" Grid.Row="3" />
+        <DockPanel Grid.Column="0" Grid.Row="4">
+            <TextBlock DockPanel.Dock="Left" Text="Y:"/>
+            <TextBlock DockPanel.Dock="Right" Text="倍表示"/>
+            <TextBox Width="auto" x:Name="Yscale" Text="" PreviewTextInput="TextPreviewTextInpt" CommandManager.PreviewExecuted="TextPreviewExexuted"/>
+        </DockPanel>
+        <TextBlock FontSize="10" Grid.Column="1" Grid.Row="4">
+            注意:表示倍率は変更されません。
+        </TextBlock>
+        <Button Click="Button_Click" Grid.ColumnSpan="2" Grid.Row="5" HorizontalAlignment="Stretch" Background="Black">
+            <TextBlock Text="決定" Foreground="White"/>
+        </Button>
+    </Grid>
+</Window>

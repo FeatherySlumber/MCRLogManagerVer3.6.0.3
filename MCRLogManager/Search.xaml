@@ -1,0 +1,110 @@
+﻿<Window x:Class="MCRLogManager.Search"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MCRLogManager"
+        mc:Ignorable="d"
+        Title="Search" Height="450" Width="800">
+    <Window.Resources>
+        <CollectionViewSource x:Key="group" Source="{Binding Staffs}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="Model.Department" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+        <BooleanToVisibilityConverter x:Key="BoolToVisible"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="(A &lt;= 0 &amp;&amp; B == 1) || (C &gt;= 10 &amp;&amp; C &lt;= 30) みたいな検索ができるはずです。チェックのついた条件に対して条件の追加、削除が行えます。"  Grid.ColumnSpan="6" Grid.Row="0"/>
+        <ListBox x:Name="SearchSetBox" ItemsSource="{Binding}" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="6" Grid.Row="1">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <DataTrigger  Binding="{Binding GroupMod}" Value="True">
+                            <Setter Property="Background" Value="DimGray"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox IsChecked="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected}"/>
+                        <ComboBox DisplayMemberPath="Name" ItemsSource="{Binding Source={x:Static local:Global.Graph}, Mode=OneTime}" SelectedItem="{Binding TargetList, Mode=OneWayToSource}" SelectedIndex="0" Width="250"/>
+                        <ComboBox SelectedIndex="{Binding Operation, Mode=OneWayToSource}">
+                            <ComboBoxItem IsSelected="True">以上</ComboBoxItem>
+                            <ComboBoxItem>以下</ComboBoxItem>
+                            <ComboBoxItem>同値</ComboBoxItem>
+                        </ComboBox>
+                        <TextBox Text="{Binding ConditionValue}" Width="300"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button Content="AND条件追加" Click="AND_Add" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"/>
+        <Button Content="OR条件追加" Click="OR_Add" Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="2"/>
+        <Button Content="条件削除" Click="Delete" Grid.Column="4" Grid.Row="2" Grid.ColumnSpan="2"/>
+        <CheckBox Content="背景色を変更する" IsChecked="{Binding Path=ChangeColor}" x:Name="ColorChangeCheckBox" Grid.Column="0" Grid.Row="3"/>
+        <Grid Background="LightGray" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="6" Visibility="{Binding IsChecked, ElementName=ColorChangeCheckBox, Converter={StaticResource BoolToVisible}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="グラフの検索箇所ハイライトの色" TextAlignment="Center" Background="Black" Foreground="White" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3"/>
+            <TextBlock Text="{Binding Value,ElementName=rSlid1, StringFormat=R:000}" FontFamily="Courier New" Grid.Column="0" Grid.Row="1"/>
+            <Slider x:Name="rSlid1" Minimum="0" Maximum="255" IsSnapToTickEnabled="True" TickFrequency="1" Background="DarkRed" Grid.Column="1" Grid.Row="1" ValueChanged="GraphColorChange"/>
+            <TextBlock Text="{Binding Value,ElementName=gSlid1, StringFormat=G:000}" FontFamily="Courier New" Grid.Column="0" Grid.Row="2"/>
+            <Slider x:Name="gSlid1" Minimum="0" Maximum="255" IsSnapToTickEnabled="True" TickFrequency="1" Background="DarkGreen" Grid.Column="1" Grid.Row="2" ValueChanged="GraphColorChange"/>
+            <TextBlock Text="{Binding Value,ElementName=bSlid1, StringFormat=B:000}" FontFamily="Courier New" Grid.Column="0" Grid.Row="3"/>
+            <Slider x:Name="bSlid1" Minimum="0" Maximum="255" IsSnapToTickEnabled="True" TickFrequency="1" Background="DarkBlue"  Grid.Column="1" Grid.Row="3" ValueChanged="GraphColorChange"/>
+            <Rectangle Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" Fill="{Binding Path=GraphBrush}" Width="{Binding RelativeSource={RelativeSource self}, Path=ActualHeight}"/>
+            <TextBlock Text="表の検索箇所ハイライトの色" TextAlignment="Center" Background="Black" Foreground="White" Grid.Column="3" Grid.Row="0" Grid.ColumnSpan="3"/>
+            <TextBlock Text="{Binding Value,ElementName=rSlid2, StringFormat=R:000}" FontFamily="Courier New" Grid.Column="3" Grid.Row="1"/>
+            <Slider x:Name="rSlid2" Minimum="0" Maximum="255" IsSnapToTickEnabled="True" TickFrequency="1" Background="DarkRed" Grid.Column="4" Grid.Row="1" ValueChanged="GridColorChange"/>
+            <TextBlock Text="{Binding Value,ElementName=gSlid2, StringFormat=G:000}" FontFamily="Courier New" Grid.Column="3" Grid.Row="2"/>
+            <Slider x:Name="gSlid2" Minimum="0" Maximum="255" IsSnapToTickEnabled="True" TickFrequency="1" Background="DarkGreen" Grid.Column="4" Grid.Row="2" ValueChanged="GridColorChange"/>
+            <TextBlock Text="{Binding Value,ElementName=bSlid2, StringFormat=B:000}" FontFamily="Courier New" Grid.Column="3" Grid.Row="3"/>
+            <Slider x:Name="bSlid2" Minimum="0" Maximum="255" IsSnapToTickEnabled="True" TickFrequency="1" Background="DarkBlue"  Grid.Column="4" Grid.Row="3" ValueChanged="GridColorChange"/>
+            <Rectangle Grid.Column="5" Grid.Row="1" Grid.RowSpan="3" Fill="{Binding Path=GridBrush}" Width="{Binding RelativeSource={RelativeSource self}, Path=ActualHeight}"/>
+
+        </Grid>
+        <Button Content="検索" Click="End_Research" Grid.Column="2" Grid.Row="5" Grid.ColumnSpan="2"/>
+    </Grid>
+</Window>
